@@ -1169,6 +1169,13 @@ class OpenimFfiBindings {
   late final _getIMListener = _getIMListenerPtr.asFunction<Openim_Listener Function()>();
 }
 
+final class _GoString_ extends ffi.Struct {
+  external ffi.Pointer<ffi.Char> p;
+
+  @ptrdiff_t()
+  external int n;
+}
+
 typedef ptrdiff_t = __darwin_ptrdiff_t;
 typedef __darwin_ptrdiff_t = ffi.Long;
 typedef Dart__darwin_ptrdiff_t = int;
