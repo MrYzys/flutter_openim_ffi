@@ -1,95 +1,116 @@
+<!--
+Copyright (c) 2025 河川(MrYzys)[https://github.com/MrYzys]
+Created: 2025-09-26
+License: AGPL-3.0-only (see LICENSE)
+-->
 # flutter_openim_ffi
 
-A new Flutter FFI plugin project.
+Flutter FFI bindings for the [OpenIM](https://www.openim.io/) native SDK. The package exposes a typed Dart API with manager classes, listeners, and
+utility models that align with the upstream OpenIM data contracts.
 
-## Getting Started
+> If this project helps you, please ⭐️ star the repository and share it with your team!
 
-This project is a starting point for a Flutter
-[FFI plugin](https://flutter.dev/to/ffi-package),
-a specialized package that includes native code directly invoked with Dart FFI.
+## Documentation
+- English (this document)
+- 中文版请见 [README-zh.md](README-zh.md)
 
-## Project structure
+## Features
+- Fully compatible with the `flutter_openim_sdk` API surface, keeping migration friction low.
+- Dart-first façade for OpenIM `3.8.3+hotfix.3.1`, including conversation, friendship, group,
+  message, and user managers.
+- Pluggable listener system that forwards native events (`OnConnectListener`,
+  `OnAdvancedMsgListener`, etc.) through `EventBridge`.
+- Pure-Dart helpers for deterministic operations such as conversation sorting, used as fallbacks
+  when the native SDK is unavailable (see the example app).
 
-This template uses the following structure:
+## Getting Started (consumer view)
+1. Add the dependency to your `pubspec.yaml` and run `flutter pub get`.
+2. Initialize the SDK before making API calls:
 
-* `src`: Contains the native source code, and a CMakeLists.txt file for building
-  that source code into a dynamic library.
+```dart
+import 'package:flutter_openim_ffi/flutter_openim_ffi.dart';
+import 'package:flutter/widgets.dart';
 
-* `lib`: Contains the Dart code that defines the API of the plugin, and which
-  calls into the native code using `dart:ffi`.
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-* platform folders (`android`, `ios`, `windows`, etc.): Contains the build files
-  for building and bundling the native code library with the platform application.
+  await OpenIM.iMManager.initSDK(
+    platformID: IMPlatform.android,
+    apiAddr: 'https://your-api-host',
+    wsAddr: 'wss://your-ws-host',
+    dataDir: '/path/to/cache',
+    listener: MyConnectListener(),
+  );
 
-## Building and bundling native code
+  runApp(const MyApp());
+}
 
-The `pubspec.yaml` specifies FFI plugins as follows:
+class MyConnectListener extends OnConnectListener {
+  @override
+  void connectSuccess() => debugPrint('OpenIM connected');
 
-```yaml
-  plugin:
-    platforms:
-      some_platform:
-        ffiPlugin: true
+  @override
+  void connectFailed(int? code, String? error) =>
+      debugPrint('OpenIM connect failed [$code]: $error');
+}
 ```
 
-This configuration invokes the native build for the various target platforms
-and bundles the binaries in Flutter applications using these FFI plugins.
+3. Interact with the managers exposed through `OpenIM.iMManager`. For example, to fetch the current
+   user information after a successful `login` call:
 
-This can be combined with dartPluginClass, such as when FFI is used for the
-implementation of one platform in a federated plugin:
-
-```yaml
-  plugin:
-    implements: some_other_plugin
-    platforms:
-      some_platform:
-        dartPluginClass: SomeClass
-        ffiPlugin: true
+```dart
+final user = await OpenIM.iMManager.userManager.getSelfUserInfo();
+debugPrint('Logged in as: ${user.nickName}');
 ```
 
-A plugin can have both FFI and method channels:
+The `example/` application demonstrates additional usage patterns, including the pure-Dart
+fallback utilities that keep the UI responsive when the native layer has not been initialised.
 
-```yaml
-  plugin:
-    platforms:
-      some_platform:
-        pluginClass: SomeName
-        ffiPlugin: true
+## Repository Layout
+- `lib/`: Public Dart API surface and generated FFI bindings (only edit hand-written files).
+- `src/`: Native sources and headers compiled into the `openim_ffi` shared library across all
+  supported platforms. Keep the library name stable when updating build scripts.
+- `example/`: Minimal Flutter client that mirrors the exposed API and exercises the fallback logic.
+- `analysis_options.yaml` / `ffigen.yaml`: Lint and binding configuration single sources of truth.
+
+## Development Workflow
+- Install dependencies: run `flutter pub get` in the repository root **and** in `example/`.
+- Format code: `dart format .` (run before sending changes for review).
+- Static analysis: `flutter analyze` must pass with zero warnings.
+- Tests: `flutter test` (add `--coverage` when gathering coverage reports).
+- Example smoke test: `cd example && flutter run -d <device>` to ensure the demo still launches.
+
+## Regenerating FFI Bindings
+When native headers change, regenerate the Dart bindings so that
+`lib/openim_ffi_bindings_generated.dart` matches the latest C definitions:
+
+```sh
+dart run ffigen --config ffigen.yaml
 ```
 
-The native build systems that are invoked by FFI (and method channel) plugins are:
+## Native Build Notes
+- The shared library is produced from `src/` using CMake (`android`, `ios`, `macos`, `linux`, and
+  `windows` host the platform-specific glue).
+- Keep the exported symbols aligned with `src/openim_ffi.h` and the generated bindings. Avoid
+  renaming the library away from `openim_ffi`, as the Flutter loader and platform projects expect
+  that identifier.
+- Prefer running long-running native calls on background isolates so the Flutter UI thread stays
+  responsive; the FFI managers already expose helpers that can be called from worker isolates.
 
-* For Android: Gradle, which invokes the Android NDK for native builds.
-  * See the documentation in android/build.gradle.
-* For iOS and MacOS: Xcode, via CocoaPods.
-  * See the documentation in ios/flutter_openim_ffi.podspec.
-  * See the documentation in macos/flutter_openim_ffi.podspec.
-* For Linux and Windows: CMake.
-  * See the documentation in linux/CMakeLists.txt.
-  * See the documentation in windows/CMakeLists.txt.
+## Contributing
+Follow the commit convention (`feat(lib): ...`, `fix(src): ...`, etc.) and attach console output for
+`flutter analyze`, `flutter test`, and any example runs in pull requests. Coordinate API changes with
+updates to both the Dart wrapper and the native headers, and keep the example app in sync with new
+features.
 
-## Binding to native code
+## Author
+- Name: 河川
+- GitHub: [MrYzYs](https://github.com/MrYzYs)
+- Homepage: https://github.com/MrYzys?tab=repositories
 
-To use the native code, bindings in Dart are needed.
-To avoid writing these by hand, they are generated from the header file
-(`src/openim_ffi.h`) by `package:ffigen`.
-Regenerate the bindings by running `dart run ffigen --config ffigen.yaml`.
-
-## Invoking native code
-
-Very short-running native functions can be directly invoked from any isolate.
-For example, see `sum` in `lib/openim_ffi.dart`.
-
-Longer-running functions should be invoked on a helper isolate to avoid
-dropping frames in Flutter applications.
-For example, see `sumAsync` in `lib/openim_ffi.dart`.
-
-## Flutter help
-
-For help getting started with Flutter, view our
-[online documentation](https://docs.flutter.dev), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-The plugin project was generated without specifying the `--platforms` flag, so no platforms are currently supported.
-To add platforms, run `flutter create -t plugin_ffi --platforms <platforms> .` in this directory.
-You can also find a detailed instruction on how to add platforms in the `pubspec.yaml` at https://flutter.dev/to/pubspec-plugin-platforms.
+## License Strategy
+- The open-source edition is released under [AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.html).
+  Derived works or hosted services must publish their complete source code and modifications.
+- Reach out to the maintainer for a commercial agreement if you need closed-source distribution,
+  commercial deployment, or official support packages. Commercial use without explicit approval
+  constitutes a violation and will trigger legal action.

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2025 河川(MrYzys)[https://github.com/MrYzys]
+Created: 2025-09-26
+License: AGPL-3.0-only (see LICENSE)
+-->
 <!-- Modify this file to customize your launch splash screen -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@android:color/white" />

@@ -1,7 +1,10 @@
+# Copyright (c) 2025 河川(MrYzys)[https://github.com/MrYzys]
+# Created: 2025-09-26
+# License: AGPL-3.0-only (see LICENSE)
 name: flutter_openim_ffi
 description: "Flutter OpenIM FFI plugin."
-version: 0.0.1
-homepage:
+version: 3.8.3
+
 
 environment:
   sdk: ^3.7.2

@@ -1,3 +1,6 @@
+# Copyright (c) 2025 河川(MrYzys)[https://github.com/MrYzys]
+# Created: 2025-09-26
+# License: AGPL-3.0-only (see LICENSE)
 #
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
 # Run `pod lib lint flutter_openim_ffi.podspec` to validate before publishing.

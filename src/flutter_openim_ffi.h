@@ -1,3 +1,6 @@
+// Copyright (c) 2025 河川(MrYzys)[https://github.com/MrYzys]
+// Created: 2025-09-26
+// License: AGPL-3.0-only (see LICENSE)
 // #include "openim_sdk_ffi_apple.h"
 
 // #include "openim_sdk_ffi_android.h"

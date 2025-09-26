@@ -1,3 +1,6 @@
+// Copyright (c) 2025 河川(MrYzys)[https://github.com/MrYzys]
+// Created: 2025-09-26
+// License: AGPL-3.0-only (see LICENSE)
 /// Conversation Strong Hint Content
 class GroupAtType {
   /// Cancel all hints, equivalent to calling the resetConversationGroupAtType method
