@@ -21,6 +21,6 @@ class EventBridge {
   int get nativePort => 0;
 
   void dispose() {
-    _handler = null;
+    // _handler = null;
   }
 }
