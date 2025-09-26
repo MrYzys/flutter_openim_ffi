@@ -9,20 +9,15 @@ import 'package:ffi/ffi.dart';
 
 import '../../openim_ffi_bindings_generated.dart';
 
-typedef _DartInitializeApiDLNative =
-    ffi.IntPtr Function(ffi.Pointer<ffi.Void> data);
+typedef _DartInitializeApiDLNative = ffi.IntPtr Function(ffi.Pointer<ffi.Void> data);
 typedef _DartInitializeApiDLDart = int Function(ffi.Pointer<ffi.Void> data);
 
 /// Thin, typed wrapper around the generated bindings.
 class OpenIMFFI {
   OpenIMFFI._(this._lib)
     : _bindings = OpenimFfiBindings(_lib),
-      _dartInitApi = _lib
-          .lookupFunction<_DartInitializeApiDLNative, _DartInitializeApiDLDart>(
-            'Dart_InitializeApiDL',
-          );
+      _dartInitApi = _lib.lookupFunction<_DartInitializeApiDLNative, _DartInitializeApiDLDart>('Dart_InitializeApiDL');
 
-  final ffi.DynamicLibrary _lib;
   final OpenimFfiBindings _bindings;
   final _DartInitializeApiDLDart _dartInitApi;
 
@@ -32,25 +27,15 @@ class OpenIMFFI {
       return ffi.DynamicLibrary.process();
     }
     if (Platform.isMacOS) {
-      final candidates = <String>[
-        'flutter_openim_ffi.framework/flutter_openim_ffi',
-        'libflutter_openim_ffi.dylib',
-        'libopenim_sdk_ffi.dylib',
-      ];
+      final candidates = <String>['flutter_openim_ffi.framework/flutter_openim_ffi', 'libflutter_openim_ffi.dylib', 'libopenim_sdk_ffi.dylib'];
       return _openFirstAvailable(candidates);
     }
     if (Platform.isAndroid || Platform.isLinux) {
-      final candidates = <String>[
-        'libflutter_openim_ffi.so',
-        'libopenim_sdk_ffi.so',
-      ];
+      final candidates = <String>['libflutter_openim_ffi.so', 'libopenim_sdk_ffi.so'];
       return _openFirstAvailable(candidates);
     }
     if (Platform.isWindows) {
-      final candidates = <String>[
-        'flutter_openim_ffi.dll',
-        'openim_sdk_ffi.dll',
-      ];
+      final candidates = <String>['flutter_openim_ffi.dll', 'openim_sdk_ffi.dll'];
       return _openFirstAvailable(candidates);
     }
     throw UnsupportedError('Unsupported platform for FFI');
@@ -65,9 +50,7 @@ class OpenIMFFI {
         lastError = err;
       }
     }
-    throw StateError(
-      'Unable to load OpenIM native library. Tried: $candidates, last error: $lastError',
-    );
+    throw StateError('Unable to load OpenIM native library. Tried: $candidates, last error: $lastError');
   }
 
   static final OpenIMFFI instance = OpenIMFFI._(_open());
@@ -76,12 +59,7 @@ class OpenIMFFI {
 
   int dartInitializeApiDL(ffi.Pointer<ffi.Void> data) => _dartInitApi(data);
 
-  bool initSDK(
-    Openim_Listener listener,
-    int port,
-    String operationID,
-    String configJson,
-  ) {
+  bool initSDK(Openim_Listener listener, int port, String operationID, String configJson) {
     return _withCString(operationID, (op) {
       return _withCString(configJson, (cfg) {
         return _bindings.InitSDK(listener, port, op, cfg);
@@ -125,10 +103,7 @@ class OpenIMFFI {
     }
   }
 
-  T _withCStrings<T>(
-    List<String?> values,
-    T Function(List<ffi.Pointer<ffi.Char>>) action,
-  ) {
+  T _withCStrings<T>(List<String?> values, T Function(List<ffi.Pointer<ffi.Char>>) action) {
     if (values.isEmpty) {
       return action(const <ffi.Pointer<ffi.Char>>[]);
     }
@@ -168,12 +143,7 @@ class OpenIMFFI {
     });
   }
 
-  void acceptGroupApplication(
-    String? operationID,
-    String? groupID,
-    String? fromUserID,
-    String? handleMsg,
-  ) {
+  void acceptGroupApplication(String? operationID, String? groupID, String? fromUserID, String? handleMsg) {
     _withCStrings([operationID, groupID, fromUserID, handleMsg], (ptrs) {
       _bindings.AcceptGroupApplication(ptrs[0], ptrs[1], ptrs[2], ptrs[3]);
     });
@@ -191,12 +161,7 @@ class OpenIMFFI {
     });
   }
 
-  void changeGroupMemberMute(
-    String? operationID,
-    String? groupID,
-    String? userID,
-    int mutedSeconds,
-  ) {
+  void changeGroupMemberMute(String? operationID, String? groupID, String? userID, int mutedSeconds) {
     _withCStrings([operationID, groupID, userID], (ptrs) {
       _bindings.ChangeGroupMemberMute(ptrs[0], ptrs[1], ptrs[2], mutedSeconds);
     });
@@ -208,11 +173,7 @@ class OpenIMFFI {
     });
   }
 
-  void changeInputStates(
-    String? operationID,
-    String? conversationID,
-    bool focus,
-  ) {
+  void changeInputStates(String? operationID, String? conversationID, bool focus) {
     _withCStrings([operationID, conversationID], (ptrs) {
       _bindings.ChangeInputStates(ptrs[0], ptrs[1], focus);
     });
@@ -224,103 +185,60 @@ class OpenIMFFI {
     });
   }
 
-  void clearConversationAndDeleteAllMsg(
-    String? operationID,
-    String? conversationID,
-  ) {
+  void clearConversationAndDeleteAllMsg(String? operationID, String? conversationID) {
     _withCStrings([operationID, conversationID], (ptrs) {
       _bindings.ClearConversationAndDeleteAllMsg(ptrs[0], ptrs[1]);
     });
   }
 
-  String createAdvancedQuoteMessage(
-    String? operationID,
-    String? text,
-    String? message,
-    String? messageEntityList,
-  ) => _withCStrings([operationID, text, message, messageEntityList], (ptrs) {
-    final result = _bindings.CreateAdvancedQuoteMessage(
-      ptrs[0],
-      ptrs[1],
-      ptrs[2],
-      ptrs[3],
-    );
-    return _consumeCString(result);
-  });
-
-  String createAdvancedTextMessage(
-    String? operationID,
-    String? text,
-    String? messageEntityList,
-  ) => _withCStrings([operationID, text, messageEntityList], (ptrs) {
-    final result = _bindings.CreateAdvancedTextMessage(
-      ptrs[0],
-      ptrs[1],
-      ptrs[2],
-    );
-    return _consumeCString(result);
-  });
-
-  String createCardMessage(String? operationID, String? cardInfo) =>
-      _withCStrings([operationID, cardInfo], (ptrs) {
-        final result = _bindings.CreateCardMessage(ptrs[0], ptrs[1]);
+  String createAdvancedQuoteMessage(String? operationID, String? text, String? message, String? messageEntityList) =>
+      _withCStrings([operationID, text, message, messageEntityList], (ptrs) {
+        final result = _bindings.CreateAdvancedQuoteMessage(ptrs[0], ptrs[1], ptrs[2], ptrs[3]);
         return _consumeCString(result);
       });
 
-  String createCustomMessage(
-    String? operationID,
-    String? data,
-    String? extension1,
-    String? description,
-  ) => _withCStrings([operationID, data, extension1, description], (ptrs) {
-    final result = _bindings.CreateCustomMessage(
-      ptrs[0],
-      ptrs[1],
-      ptrs[2],
-      ptrs[3],
-    );
-    return _consumeCString(result);
-  });
-
-  String createFaceMessage(String? operationID, int index, String? data) =>
-      _withCStrings([operationID, data], (ptrs) {
-        final result = _bindings.CreateFaceMessage(ptrs[0], index, ptrs[1]);
+  String createAdvancedTextMessage(String? operationID, String? text, String? messageEntityList) =>
+      _withCStrings([operationID, text, messageEntityList], (ptrs) {
+        final result = _bindings.CreateAdvancedTextMessage(ptrs[0], ptrs[1], ptrs[2]);
         return _consumeCString(result);
       });
 
-  String createFileMessage(
-    String? operationID,
-    String? filePath,
-    String? fileName,
-  ) => _withCStrings([operationID, filePath, fileName], (ptrs) {
+  String createCardMessage(String? operationID, String? cardInfo) => _withCStrings([operationID, cardInfo], (ptrs) {
+    final result = _bindings.CreateCardMessage(ptrs[0], ptrs[1]);
+    return _consumeCString(result);
+  });
+
+  String createCustomMessage(String? operationID, String? data, String? extension1, String? description) =>
+      _withCStrings([operationID, data, extension1, description], (ptrs) {
+        final result = _bindings.CreateCustomMessage(ptrs[0], ptrs[1], ptrs[2], ptrs[3]);
+        return _consumeCString(result);
+      });
+
+  String createFaceMessage(String? operationID, int index, String? data) => _withCStrings([operationID, data], (ptrs) {
+    final result = _bindings.CreateFaceMessage(ptrs[0], index, ptrs[1]);
+    return _consumeCString(result);
+  });
+
+  String createFileMessage(String? operationID, String? filePath, String? fileName) => _withCStrings([operationID, filePath, fileName], (ptrs) {
     final result = _bindings.CreateFileMessage(ptrs[0], ptrs[1], ptrs[2]);
     return _consumeCString(result);
   });
 
-  String createFileMessageByURL(String? operationID, String? fileBaseInfo) =>
-      _withCStrings([operationID, fileBaseInfo], (ptrs) {
-        final result = _bindings.CreateFileMessageByURL(ptrs[0], ptrs[1]);
-        return _consumeCString(result);
-      });
-
-  String createFileMessageFromFullPath(
-    String? operationID,
-    String? fileFullPath,
-    String? fileName,
-  ) => _withCStrings([operationID, fileFullPath, fileName], (ptrs) {
-    final result = _bindings.CreateFileMessageFromFullPath(
-      ptrs[0],
-      ptrs[1],
-      ptrs[2],
-    );
+  String createFileMessageByURL(String? operationID, String? fileBaseInfo) => _withCStrings([operationID, fileBaseInfo], (ptrs) {
+    final result = _bindings.CreateFileMessageByURL(ptrs[0], ptrs[1]);
     return _consumeCString(result);
   });
 
-  String createForwardMessage(String? operationID, String? m) =>
-      _withCStrings([operationID, m], (ptrs) {
-        final result = _bindings.CreateForwardMessage(ptrs[0], ptrs[1]);
+  String createFileMessageFromFullPath(String? operationID, String? fileFullPath, String? fileName) =>
+      _withCStrings([operationID, fileFullPath, fileName], (ptrs) {
+        final result = _bindings.CreateFileMessageFromFullPath(ptrs[0], ptrs[1], ptrs[2]);
         return _consumeCString(result);
       });
+
+  String createForwardMessage(String? operationID, String? m) => _withCStrings([operationID, m], (ptrs) {
+    final result = _bindings.CreateForwardMessage(ptrs[0], ptrs[1]);
+    return _consumeCString(result);
+  });
 
   void createGroup(String? operationID, String? groupReqInfo) {
     _withCStrings([operationID, groupReqInfo], (ptrs) {
@@ -328,174 +246,81 @@ class OpenIMFFI {
     });
   }
 
-  String createImageMessage(String? operationID, String? imagePath) =>
-      _withCStrings([operationID, imagePath], (ptrs) {
-        final result = _bindings.CreateImageMessage(ptrs[0], ptrs[1]);
+  String createImageMessage(String? operationID, String? imagePath) => _withCStrings([operationID, imagePath], (ptrs) {
+    final result = _bindings.CreateImageMessage(ptrs[0], ptrs[1]);
+    return _consumeCString(result);
+  });
+
+  String createImageMessageByURL(String? operationID, String? sourcePath, String? sourcePicture, String? bigPicture, String? snapshotPicture) =>
+      _withCStrings([operationID, sourcePath, sourcePicture, bigPicture, snapshotPicture], (ptrs) {
+        final result = _bindings.CreateImageMessageByURL(ptrs[0], ptrs[1], ptrs[2], ptrs[3], ptrs[4]);
         return _consumeCString(result);
       });
 
-  String createImageMessageByURL(
-    String? operationID,
-    String? sourcePath,
-    String? sourcePicture,
-    String? bigPicture,
-    String? snapshotPicture,
-  ) => _withCStrings(
-    [operationID, sourcePath, sourcePicture, bigPicture, snapshotPicture],
-    (ptrs) {
-      final result = _bindings.CreateImageMessageByURL(
-        ptrs[0],
-        ptrs[1],
-        ptrs[2],
-        ptrs[3],
-        ptrs[4],
-      );
-      return _consumeCString(result);
-    },
-  );
-
-  String createImageMessageFromFullPath(
-    String? operationID,
-    String? imageFullPath,
-  ) => _withCStrings([operationID, imageFullPath], (ptrs) {
+  String createImageMessageFromFullPath(String? operationID, String? imageFullPath) => _withCStrings([operationID, imageFullPath], (ptrs) {
     final result = _bindings.CreateImageMessageFromFullPath(ptrs[0], ptrs[1]);
     return _consumeCString(result);
   });
 
-  String createLocationMessage(
-    String? operationID,
-    String? description,
-    double longitude,
-    double latitude,
-  ) => _withCStrings([operationID, description], (ptrs) {
-    final result = _bindings.CreateLocationMessage(
-      ptrs[0],
-      ptrs[1],
-      longitude,
-      latitude,
-    );
-    return _consumeCString(result);
-  });
+  String createLocationMessage(String? operationID, String? description, double longitude, double latitude) =>
+      _withCStrings([operationID, description], (ptrs) {
+        final result = _bindings.CreateLocationMessage(ptrs[0], ptrs[1], longitude, latitude);
+        return _consumeCString(result);
+      });
 
-  String createMergerMessage(
-    String? operationID,
-    String? messageList,
-    String? title,
-    String? summaryList,
-  ) => _withCStrings([operationID, messageList, title, summaryList], (ptrs) {
-    final result = _bindings.CreateMergerMessage(
-      ptrs[0],
-      ptrs[1],
-      ptrs[2],
-      ptrs[3],
-    );
-    return _consumeCString(result);
-  });
+  String createMergerMessage(String? operationID, String? messageList, String? title, String? summaryList) =>
+      _withCStrings([operationID, messageList, title, summaryList], (ptrs) {
+        final result = _bindings.CreateMergerMessage(ptrs[0], ptrs[1], ptrs[2], ptrs[3]);
+        return _consumeCString(result);
+      });
 
-  String createQuoteMessage(
-    String? operationID,
-    String? text,
-    String? message,
-  ) => _withCStrings([operationID, text, message], (ptrs) {
+  String createQuoteMessage(String? operationID, String? text, String? message) => _withCStrings([operationID, text, message], (ptrs) {
     final result = _bindings.CreateQuoteMessage(ptrs[0], ptrs[1], ptrs[2]);
     return _consumeCString(result);
   });
 
-  String createSoundMessage(
-    String? operationID,
-    String? soundPath,
-    int duration,
-  ) => _withCStrings([operationID, soundPath], (ptrs) {
+  String createSoundMessage(String? operationID, String? soundPath, int duration) => _withCStrings([operationID, soundPath], (ptrs) {
     final result = _bindings.CreateSoundMessage(ptrs[0], ptrs[1], duration);
     return _consumeCString(result);
   });
 
-  String createSoundMessageByURL(String? operationID, String? soundBaseInfo) =>
-      _withCStrings([operationID, soundBaseInfo], (ptrs) {
-        final result = _bindings.CreateSoundMessageByURL(ptrs[0], ptrs[1]);
-        return _consumeCString(result);
-      });
-
-  String createSoundMessageFromFullPath(
-    String? operationID,
-    String? soundFullPath,
-    int duration,
-  ) => _withCStrings([operationID, soundFullPath], (ptrs) {
-    final result = _bindings.CreateSoundMessageFromFullPath(
-      ptrs[0],
-      ptrs[1],
-      duration,
-    );
+  String createSoundMessageByURL(String? operationID, String? soundBaseInfo) => _withCStrings([operationID, soundBaseInfo], (ptrs) {
+    final result = _bindings.CreateSoundMessageByURL(ptrs[0], ptrs[1]);
     return _consumeCString(result);
   });
 
-  String createTextAtMessage(
-    String? operationID,
-    String? text,
-    String? atUserList,
-    String? atUsersInfo,
-    String? message,
-  ) => _withCStrings([operationID, text, atUserList, atUsersInfo, message], (
-    ptrs,
-  ) {
-    final result = _bindings.CreateTextAtMessage(
-      ptrs[0],
-      ptrs[1],
-      ptrs[2],
-      ptrs[3],
-      ptrs[4],
-    );
+  String createSoundMessageFromFullPath(String? operationID, String? soundFullPath, int duration) => _withCStrings([operationID, soundFullPath], (ptrs) {
+    final result = _bindings.CreateSoundMessageFromFullPath(ptrs[0], ptrs[1], duration);
     return _consumeCString(result);
   });
 
-  String createTextMessage(String? operationID, String? text) =>
-      _withCStrings([operationID, text], (ptrs) {
-        final result = _bindings.CreateTextMessage(ptrs[0], ptrs[1]);
+  String createTextAtMessage(String? operationID, String? text, String? atUserList, String? atUsersInfo, String? message) =>
+      _withCStrings([operationID, text, atUserList, atUsersInfo, message], (ptrs) {
+        final result = _bindings.CreateTextAtMessage(ptrs[0], ptrs[1], ptrs[2], ptrs[3], ptrs[4]);
         return _consumeCString(result);
       });
 
-  String createVideoMessage(
-    String? operationID,
-    String? videoPath,
-    String? videoType,
-    int duration,
-    String? snapshotPath,
-  ) => _withCStrings([operationID, videoPath, videoType, snapshotPath], (ptrs) {
-    final result = _bindings.CreateVideoMessage(
-      ptrs[0],
-      ptrs[1],
-      ptrs[2],
-      duration,
-      ptrs[3],
-    );
+  String createTextMessage(String? operationID, String? text) => _withCStrings([operationID, text], (ptrs) {
+    final result = _bindings.CreateTextMessage(ptrs[0], ptrs[1]);
     return _consumeCString(result);
   });
 
-  String createVideoMessageByURL(String? operationID, String? videoBaseInfo) =>
-      _withCStrings([operationID, videoBaseInfo], (ptrs) {
-        final result = _bindings.CreateVideoMessageByURL(ptrs[0], ptrs[1]);
+  String createVideoMessage(String? operationID, String? videoPath, String? videoType, int duration, String? snapshotPath) =>
+      _withCStrings([operationID, videoPath, videoType, snapshotPath], (ptrs) {
+        final result = _bindings.CreateVideoMessage(ptrs[0], ptrs[1], ptrs[2], duration, ptrs[3]);
         return _consumeCString(result);
       });
 
-  String createVideoMessageFromFullPath(
-    String? operationID,
-    String? videoFullPath,
-    String? videoType,
-    int duration,
-    String? snapshotFullPath,
-  ) => _withCStrings(
-    [operationID, videoFullPath, videoType, snapshotFullPath],
-    (ptrs) {
-      final result = _bindings.CreateVideoMessageFromFullPath(
-        ptrs[0],
-        ptrs[1],
-        ptrs[2],
-        duration,
-        ptrs[3],
-      );
-      return _consumeCString(result);
-    },
-  );
+  String createVideoMessageByURL(String? operationID, String? videoBaseInfo) => _withCStrings([operationID, videoBaseInfo], (ptrs) {
+    final result = _bindings.CreateVideoMessageByURL(ptrs[0], ptrs[1]);
+    return _consumeCString(result);
+  });
+
+  String createVideoMessageFromFullPath(String? operationID, String? videoFullPath, String? videoType, int duration, String? snapshotFullPath) =>
+      _withCStrings([operationID, videoFullPath, videoType, snapshotFullPath], (ptrs) {
+        final result = _bindings.CreateVideoMessageFromFullPath(ptrs[0], ptrs[1], ptrs[2], duration, ptrs[3]);
+        return _consumeCString(result);
+      });
 
   void deleteAllMsgFromLocal(String? operationID) {
     _withCStrings([operationID], (ptrs) {
@@ -509,10 +334,7 @@ class OpenIMFFI {
     });
   }
 
-  void deleteConversationAndDeleteAllMsg(
-    String? operationID,
-    String? conversationID,
-  ) {
+  void deleteConversationAndDeleteAllMsg(String? operationID, String? conversationID) {
     _withCStrings([operationID, conversationID], (ptrs) {
       _bindings.DeleteConversationAndDeleteAllMsg(ptrs[0], ptrs[1]);
     });
@@ -524,21 +346,13 @@ class OpenIMFFI {
     });
   }
 
-  void deleteMessage(
-    String? operationID,
-    String? conversationID,
-    String? clientMsgID,
-  ) {
+  void deleteMessage(String? operationID, String? conversationID, String? clientMsgID) {
     _withCStrings([operationID, conversationID, clientMsgID], (ptrs) {
       _bindings.DeleteMessage(ptrs[0], ptrs[1], ptrs[2]);
     });
   }
 
-  void deleteMessageFromLocalStorage(
-    String? operationID,
-    String? conversationID,
-    String? clientMsgID,
-  ) {
+  void deleteMessageFromLocalStorage(String? operationID, String? conversationID, String? clientMsgID) {
     _withCStrings([operationID, conversationID, clientMsgID], (ptrs) {
       _bindings.DeleteMessageFromLocalStorage(ptrs[0], ptrs[1], ptrs[2]);
     });
@@ -556,19 +370,13 @@ class OpenIMFFI {
     });
   }
 
-  void getAdvancedHistoryMessageList(
-    String? operationID,
-    String? getMessageOptions,
-  ) {
+  void getAdvancedHistoryMessageList(String? operationID, String? getMessageOptions) {
     _withCStrings([operationID, getMessageOptions], (ptrs) {
       _bindings.GetAdvancedHistoryMessageList(ptrs[0], ptrs[1]);
     });
   }
 
-  void getAdvancedHistoryMessageListReverse(
-    String? operationID,
-    String? getMessageOptions,
-  ) {
+  void getAdvancedHistoryMessageListReverse(String? operationID, String? getMessageOptions) {
     _withCStrings([operationID, getMessageOptions], (ptrs) {
       _bindings.GetAdvancedHistoryMessageListReverse(ptrs[0], ptrs[1]);
     });
@@ -580,11 +388,10 @@ class OpenIMFFI {
     });
   }
 
-  String getAtAllTag(String? operationID) =>
-      _withCStrings([operationID], (ptrs) {
-        final result = _bindings.GetAtAllTag(ptrs[0]);
-        return _consumeCString(result);
-      });
+  String getAtAllTag(String? operationID) => _withCStrings([operationID], (ptrs) {
+    final result = _bindings.GetAtAllTag(ptrs[0]);
+    return _consumeCString(result);
+  });
 
   void getBlackList(String? operationID) {
     _withCStrings([operationID], (ptrs) {
@@ -592,16 +399,8 @@ class OpenIMFFI {
     });
   }
 
-  String getConversationIDBySessionType(
-    String? operationID,
-    String? sourceID,
-    int sessionType,
-  ) => _withCStrings([operationID, sourceID], (ptrs) {
-    final result = _bindings.GetConversationIDBySessionType(
-      ptrs[0],
-      ptrs[1],
-      sessionType,
-    );
+  String getConversationIDBySessionType(String? operationID, String? sourceID, int sessionType) => _withCStrings([operationID, sourceID], (ptrs) {
+    final result = _bindings.GetConversationIDBySessionType(ptrs[0], ptrs[1], sessionType);
     return _consumeCString(result);
   });
 
@@ -629,12 +428,7 @@ class OpenIMFFI {
     });
   }
 
-  void getFriendListPage(
-    String? operationID,
-    int offset,
-    int count,
-    bool filterBlack,
-  ) {
+  void getFriendListPage(String? operationID, int offset, int count, bool filterBlack) {
     _withCStrings([operationID], (ptrs) {
       _bindings.GetFriendListPage(ptrs[0], offset, count, filterBlack);
     });
@@ -652,13 +446,7 @@ class OpenIMFFI {
     });
   }
 
-  void getGroupMemberList(
-    String? operationID,
-    String? groupID,
-    int filter,
-    int offset,
-    int count,
-  ) {
+  void getGroupMemberList(String? operationID, String? groupID, int filter, int offset, int count) {
     _withCStrings([operationID, groupID], (ptrs) {
       _bindings.GetGroupMemberList(ptrs[0], ptrs[1], filter, offset, count);
     });
@@ -674,15 +462,7 @@ class OpenIMFFI {
     String? filterUserIDList,
   ) {
     _withCStrings([operationID, groupID, filterUserIDList], (ptrs) {
-      _bindings.GetGroupMemberListByJoinTimeFilter(
-        ptrs[0],
-        ptrs[1],
-        offset,
-        count,
-        joinTimeBegin,
-        joinTimeEnd,
-        ptrs[2],
-      );
+      _bindings.GetGroupMemberListByJoinTimeFilter(ptrs[0], ptrs[1], offset, count, joinTimeBegin, joinTimeEnd, ptrs[2]);
     });
   }
 
@@ -692,11 +472,7 @@ class OpenIMFFI {
     });
   }
 
-  void getInputStates(
-    String? operationID,
-    String? conversationID,
-    String? userID,
-  ) {
+  void getInputStates(String? operationID, String? conversationID, String? userID) {
     _withCStrings([operationID, conversationID, userID], (ptrs) {
       _bindings.GetInputStates(ptrs[0], ptrs[1], ptrs[2]);
     });
@@ -714,20 +490,13 @@ class OpenIMFFI {
     });
   }
 
-  void getMultipleConversation(
-    String? operationID,
-    String? conversationIDList,
-  ) {
+  void getMultipleConversation(String? operationID, String? conversationIDList) {
     _withCStrings([operationID, conversationIDList], (ptrs) {
       _bindings.GetMultipleConversation(ptrs[0], ptrs[1]);
     });
   }
 
-  void getOneConversation(
-    String? operationID,
-    int sessionType,
-    String? sourceID,
-  ) {
+  void getOneConversation(String? operationID, int sessionType, String? sourceID) {
     _withCStrings([operationID, sourceID], (ptrs) {
       _bindings.GetOneConversation(ptrs[0], sessionType, ptrs[1]);
     });
@@ -739,21 +508,13 @@ class OpenIMFFI {
     });
   }
 
-  void getSpecifiedFriendsInfo(
-    String? operationID,
-    String? userIDList,
-    bool filterBlack,
-  ) {
+  void getSpecifiedFriendsInfo(String? operationID, String? userIDList, bool filterBlack) {
     _withCStrings([operationID, userIDList], (ptrs) {
       _bindings.GetSpecifiedFriendsInfo(ptrs[0], ptrs[1], filterBlack);
     });
   }
 
-  void getSpecifiedGroupMembersInfo(
-    String? operationID,
-    String? groupID,
-    String? userIDList,
-  ) {
+  void getSpecifiedGroupMembersInfo(String? operationID, String? groupID, String? userIDList) {
     _withCStrings([operationID, groupID, userIDList], (ptrs) {
       _bindings.GetSpecifiedGroupMembersInfo(ptrs[0], ptrs[1], ptrs[2]);
     });
@@ -777,11 +538,7 @@ class OpenIMFFI {
     });
   }
 
-  void getUsersInGroup(
-    String? operationID,
-    String? groupID,
-    String? userIDList,
-  ) {
+  void getUsersInGroup(String? operationID, String? groupID, String? userIDList) {
     _withCStrings([operationID, groupID, userIDList], (ptrs) {
       _bindings.GetUsersInGroup(ptrs[0], ptrs[1], ptrs[2]);
     });
@@ -805,44 +562,19 @@ class OpenIMFFI {
     });
   }
 
-  void insertGroupMessageToLocalStorage(
-    String? operationID,
-    String? message,
-    String? groupID,
-    String? sendID,
-  ) {
+  void insertGroupMessageToLocalStorage(String? operationID, String? message, String? groupID, String? sendID) {
     _withCStrings([operationID, message, groupID, sendID], (ptrs) {
-      _bindings.InsertGroupMessageToLocalStorage(
-        ptrs[0],
-        ptrs[1],
-        ptrs[2],
-        ptrs[3],
-      );
+      _bindings.InsertGroupMessageToLocalStorage(ptrs[0], ptrs[1], ptrs[2], ptrs[3]);
     });
   }
 
-  void insertSingleMessageToLocalStorage(
-    String? operationID,
-    String? message,
-    String? recvID,
-    String? sendID,
-  ) {
+  void insertSingleMessageToLocalStorage(String? operationID, String? message, String? recvID, String? sendID) {
     _withCStrings([operationID, message, recvID, sendID], (ptrs) {
-      _bindings.InsertSingleMessageToLocalStorage(
-        ptrs[0],
-        ptrs[1],
-        ptrs[2],
-        ptrs[3],
-      );
+      _bindings.InsertSingleMessageToLocalStorage(ptrs[0], ptrs[1], ptrs[2], ptrs[3]);
     });
   }
 
-  void inviteUserToGroup(
-    String? operationID,
-    String? groupID,
-    String? reason,
-    String? userIDList,
-  ) {
+  void inviteUserToGroup(String? operationID, String? groupID, String? reason, String? userIDList) {
     _withCStrings([operationID, groupID, reason, userIDList], (ptrs) {
       _bindings.InviteUserToGroup(ptrs[0], ptrs[1], ptrs[2], ptrs[3]);
     });
@@ -854,65 +586,31 @@ class OpenIMFFI {
     });
   }
 
-  void joinGroup(
-    String? operationID,
-    String? groupID,
-    String? reqMsg,
-    int joinSource,
-    String? ex,
-  ) {
+  void joinGroup(String? operationID, String? groupID, String? reqMsg, int joinSource, String? ex) {
     _withCStrings([operationID, groupID, reqMsg, ex], (ptrs) {
       _bindings.JoinGroup(ptrs[0], ptrs[1], ptrs[2], joinSource, ptrs[3]);
     });
   }
 
-  void kickGroupMember(
-    String? operationID,
-    String? groupID,
-    String? reason,
-    String? userIDList,
-  ) {
+  void kickGroupMember(String? operationID, String? groupID, String? reason, String? userIDList) {
     _withCStrings([operationID, groupID, reason, userIDList], (ptrs) {
       _bindings.KickGroupMember(ptrs[0], ptrs[1], ptrs[2], ptrs[3]);
     });
   }
 
-  void logs(
-    String? operationID,
-    int logLevel,
-    String? file,
-    int line,
-    String? msgs,
-    String? err,
-    String? keyAndValue,
-  ) {
+  void logs(String? operationID, int logLevel, String? file, int line, String? msgs, String? err, String? keyAndValue) {
     _withCStrings([operationID, file, msgs, err, keyAndValue], (ptrs) {
-      _bindings.Logs(
-        ptrs[0],
-        logLevel,
-        ptrs[1],
-        line,
-        ptrs[2],
-        ptrs[3],
-        ptrs[4],
-      );
+      _bindings.Logs(ptrs[0], logLevel, ptrs[1], line, ptrs[2], ptrs[3], ptrs[4]);
     });
   }
 
-  void markConversationMessageAsRead(
-    String? operationID,
-    String? conversationID,
-  ) {
+  void markConversationMessageAsRead(String? operationID, String? conversationID) {
     _withCStrings([operationID, conversationID], (ptrs) {
       _bindings.MarkConversationMessageAsRead(ptrs[0], ptrs[1]);
     });
   }
 
-  void markMessagesAsReadByMsgID(
-    String? operationID,
-    String? conversationID,
-    String? clientMsgIDs,
-  ) {
+  void markMessagesAsReadByMsgID(String? operationID, String? conversationID, String? clientMsgIDs) {
     _withCStrings([operationID, conversationID, clientMsgIDs], (ptrs) {
       _bindings.MarkMessagesAsReadByMsgID(ptrs[0], ptrs[1], ptrs[2]);
     });
@@ -936,12 +634,7 @@ class OpenIMFFI {
     });
   }
 
-  void refuseGroupApplication(
-    String? operationID,
-    String? groupID,
-    String? fromUserID,
-    String? handleMsg,
-  ) {
+  void refuseGroupApplication(String? operationID, String? groupID, String? fromUserID, String? handleMsg) {
     _withCStrings([operationID, groupID, fromUserID, handleMsg], (ptrs) {
       _bindings.RefuseGroupApplication(ptrs[0], ptrs[1], ptrs[2], ptrs[3]);
     });
@@ -953,11 +646,7 @@ class OpenIMFFI {
     });
   }
 
-  void revokeMessage(
-    String? operationID,
-    String? conversationID,
-    String? clientMsgID,
-  ) {
+  void revokeMessage(String? operationID, String? conversationID, String? clientMsgID) {
     _withCStrings([operationID, conversationID, clientMsgID], (ptrs) {
       _bindings.RevokeMessage(ptrs[0], ptrs[1], ptrs[2]);
     });
@@ -993,30 +682,14 @@ class OpenIMFFI {
     });
   }
 
-  void sendMessage(
-    String? operationID,
-    String? message,
-    String? recvID,
-    String? groupID,
-    String? offlinePushInfo,
-  ) {
-    _withCStrings([operationID, message, recvID, groupID, offlinePushInfo], (
-      ptrs,
-    ) {
+  void sendMessage(String? operationID, String? message, String? recvID, String? groupID, String? offlinePushInfo) {
+    _withCStrings([operationID, message, recvID, groupID, offlinePushInfo], (ptrs) {
       _bindings.SendMessage(ptrs[0], ptrs[1], ptrs[2], ptrs[3], ptrs[4]);
     });
   }
 
-  void sendMessageNotOss(
-    String? operationID,
-    String? message,
-    String? recvID,
-    String? groupID,
-    String? offlinePushInfo,
-  ) {
-    _withCStrings([operationID, message, recvID, groupID, offlinePushInfo], (
-      ptrs,
-    ) {
+  void sendMessageNotOss(String? operationID, String? message, String? recvID, String? groupID, String? offlinePushInfo) {
+    _withCStrings([operationID, message, recvID, groupID, offlinePushInfo], (ptrs) {
       _bindings.SendMessageNotOss(ptrs[0], ptrs[1], ptrs[2], ptrs[3], ptrs[4]);
     });
   }
@@ -1033,21 +706,13 @@ class OpenIMFFI {
     });
   }
 
-  void setConversation(
-    String? operationID,
-    String? conversationID,
-    String? draftText,
-  ) {
+  void setConversation(String? operationID, String? conversationID, String? draftText) {
     _withCStrings([operationID, conversationID, draftText], (ptrs) {
       _bindings.SetConversation(ptrs[0], ptrs[1], ptrs[2]);
     });
   }
 
-  void setConversationDraft(
-    String? operationID,
-    String? conversationID,
-    String? draftText,
-  ) {
+  void setConversationDraft(String? operationID, String? conversationID, String? draftText) {
     _withCStrings([operationID, conversationID, draftText], (ptrs) {
       _bindings.SetConversationDraft(ptrs[0], ptrs[1], ptrs[2]);
     });
@@ -1065,12 +730,7 @@ class OpenIMFFI {
     });
   }
 
-  void setMessageLocalEx(
-    String? operationID,
-    String? conversationID,
-    String? clientMsgID,
-    String? localEx,
-  ) {
+  void setMessageLocalEx(String? operationID, String? conversationID, String? clientMsgID, String? localEx) {
     _withCStrings([operationID, conversationID, clientMsgID, localEx], (ptrs) {
       _bindings.SetMessageLocalEx(ptrs[0], ptrs[1], ptrs[2], ptrs[3]);
     });
@@ -1088,11 +748,7 @@ class OpenIMFFI {
     });
   }
 
-  void transferGroupOwner(
-    String? operationID,
-    String? groupID,
-    String? newOwnerUserID,
-  ) {
+  void transferGroupOwner(String? operationID, String? groupID, String? newOwnerUserID) {
     _withCStrings([operationID, groupID, newOwnerUserID], (ptrs) {
       _bindings.TransferGroupOwner(ptrs[0], ptrs[1], ptrs[2]);
     });

@@ -10,13 +10,11 @@ class EventBridge {
 
   static final EventBridge instance = EventBridge._();
 
-  EventHandler? _handler;
+  // EventHandler? _handler;
 
   bool get isInitialized => true;
 
-  void setHandler(EventHandler handler) {
-    _handler = handler;
-  }
+  void setHandler(EventHandler handler) {}
 
   void ensureInitialized() {}
 
