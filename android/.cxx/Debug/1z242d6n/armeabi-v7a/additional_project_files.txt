@@ -1,0 +1,2 @@
+/Users/fangqi/Work/woledo/flutter_openim_ffi/src/flutter_openim_ffi.h
+/Users/fangqi/Work/woledo/flutter_openim_ffi/src/openim_ffi.h

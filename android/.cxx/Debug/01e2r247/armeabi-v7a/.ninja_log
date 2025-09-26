@@ -1,0 +1,5 @@
+# ninja log v5
+1	115	1758859813974524727	CMakeFiles/flutter_openim_sdk_ffi.dir/openim_ffi.c.o	a5474e708843430
+0	117	1758859813978914196	CMakeFiles/flutter_openim_sdk_ffi.dir/flutter_openim_sdk_ffi.c.o	63d2e5b3b31e59b5
+117	229	1758859814090553343	/Users/fangqi/Work/woledo/app/plugin/flutter_openim_sdk/example/build/flutter_openim_sdk/intermediates/cxx/Debug/01e2r247/obj/armeabi-v7a/libflutter_openim_sdk_ffi.so	dac1abc6400b5373
+1	139	1758866166484053011	/Users/fangqi/Work/woledo/app/plugin/flutter_openim_sdk/example/build/flutter_openim_sdk/intermediates/cxx/Debug/01e2r247/obj/armeabi-v7a/libflutter_openim_sdk_ffi.so	dac1abc6400b5373

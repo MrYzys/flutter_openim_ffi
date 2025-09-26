@@ -1,0 +1,3 @@
+/Users/fangqi/Work/woledo/app/plugin/flutter_openim_sdk/android/.cxx/Debug/01e2r247/x86/CMakeFiles/flutter_openim_sdk_ffi.dir
+/Users/fangqi/Work/woledo/app/plugin/flutter_openim_sdk/android/.cxx/Debug/01e2r247/x86/CMakeFiles/edit_cache.dir
+/Users/fangqi/Work/woledo/app/plugin/flutter_openim_sdk/android/.cxx/Debug/01e2r247/x86/CMakeFiles/rebuild_cache.dir

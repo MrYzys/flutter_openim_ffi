@@ -1,0 +1,60 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.6.0"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "flutter_openim_sdk_ffi_library",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "flutter_openim_sdk_ffi::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-flutter_openim_sdk_ffi-Debug-75dfec1a3c3e88b3efdf.json",
+					"name" : "flutter_openim_sdk_ffi",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/Users/fangqi/Work/woledo/app/plugin/flutter_openim_sdk/android/.cxx/Debug/01e2r247/x86",
+		"source" : "/Users/fangqi/Work/woledo/app/plugin/flutter_openim_sdk/src"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}

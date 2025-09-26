@@ -1,0 +1,27 @@
+{
+  "buildFiles": [
+    "/Users/fangqi/Work/woledo/flutter_openim_ffi/src/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/fangqi/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/fangqi/Work/woledo/flutter_openim_ffi/android/.cxx/Debug/1z242d6n/arm64-v8a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/fangqi/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/fangqi/Work/woledo/flutter_openim_ffi/android/.cxx/Debug/1z242d6n/arm64-v8a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "flutter_openim_ffi::@6890427a1f51a3e7e1df": {
+      "artifactName": "flutter_openim_ffi",
+      "abi": "arm64-v8a",
+      "output": "/Users/fangqi/Work/woledo/flutter_openim_ffi/example/build/flutter_openim_ffi/intermediates/cxx/Debug/1z242d6n/obj/arm64-v8a/libflutter_openim_ffi.so",
+      "runtimeFiles": []
+    }
+  }
+}

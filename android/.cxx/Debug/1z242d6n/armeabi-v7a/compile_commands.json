@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/Users/fangqi/Work/woledo/flutter_openim_ffi/android/.cxx/Debug/1z242d6n/armeabi-v7a",
+  "command": "/Users/fangqi/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=armv7-none-linux-androideabi21 --gcc-toolchain=/Users/fangqi/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/fangqi/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -DDART_SHARED_LIB -Dflutter_openim_ffi_EXPORTS -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -mthumb -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC -o CMakeFiles/flutter_openim_ffi.dir/flutter_openim_ffi.c.o -c /Users/fangqi/Work/woledo/flutter_openim_ffi/src/flutter_openim_ffi.c",
+  "file": "/Users/fangqi/Work/woledo/flutter_openim_ffi/src/flutter_openim_ffi.c"
+},
+{
+  "directory": "/Users/fangqi/Work/woledo/flutter_openim_ffi/android/.cxx/Debug/1z242d6n/armeabi-v7a",
+  "command": "/Users/fangqi/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=armv7-none-linux-androideabi21 --gcc-toolchain=/Users/fangqi/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/fangqi/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -DDART_SHARED_LIB -Dflutter_openim_ffi_EXPORTS -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -mthumb -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC -o CMakeFiles/flutter_openim_ffi.dir/openim_ffi.c.o -c /Users/fangqi/Work/woledo/flutter_openim_ffi/src/openim_ffi.c",
+  "file": "/Users/fangqi/Work/woledo/flutter_openim_ffi/src/openim_ffi.c"
+}
+]
