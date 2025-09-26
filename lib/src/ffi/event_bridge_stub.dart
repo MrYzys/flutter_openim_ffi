@@ -10,6 +10,7 @@ class EventBridge {
 
   static final EventBridge instance = EventBridge._();
 
+  // ignore: unused_field
   EventHandler? _handler;
 
   bool get isInitialized => true;

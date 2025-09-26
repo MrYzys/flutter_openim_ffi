@@ -3,5 +3,18 @@
 # License: AGPL-3.0-only (see LICENSE)
 include: package:flutter_lints/flutter.yaml
 
+analyzer:
+  exclude:
+    - lib/openim_ffi_bindings_generated.dart
+  errors:
+    deprecated_member_use_from_same_package: ignore
+
+linter:
+  rules:
+    avoid_print: false
+    prefer_collection_literals: false
+    unnecessary_this: false
+    unnecessary_new: false
+
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

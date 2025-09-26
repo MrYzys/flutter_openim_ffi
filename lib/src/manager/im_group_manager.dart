@@ -1,15 +1,13 @@
 // Copyright (c) 2025 河川(MrYzys)[https://github.com/MrYzys]
 // Created: 2025-09-26
 // License: AGPL-3.0-only (see LICENSE)
-import 'dart:developer';
 
 import 'package:flutter_openim_ffi/flutter_openim_ffi.dart';
 
 import '../ffi/native_bridge.dart';
-import 'package:flutter_openim_ffi/src/models/set_group_member_info.dart';
 
 class GroupManager {
-  NativeBridge _channel;
+  final NativeBridge _channel;
   late OnGroupListener listener;
 
   GroupManager(this._channel);

@@ -2,15 +2,14 @@
 // Created: 2025-09-26
 // License: AGPL-3.0-only (see LICENSE)
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter_openim_ffi/flutter_openim_ffi.dart';
+import 'package:flutter_openim_ffi/src/logger.dart';
 
-import '../models/update_req.dart';
 import '../ffi/native_bridge.dart';
 
 class ConversationManager {
-  NativeBridge _channel;
+  final NativeBridge _channel;
   late OnConversationListener listener;
 
   ConversationManager(this._channel);
@@ -415,7 +414,7 @@ class ConversationManager {
           }),
         )
         .then((value) {
-          print('getInputStates: $value');
+          Logger.print('getInputStates: $value');
           final result = Utils.toListMap(value);
           return List<int>.from(result);
         });

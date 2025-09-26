@@ -105,7 +105,9 @@ class ConversationInfo {
       } else if (json['latestMsg'] is Map) {
         latestMsg = Message.fromJson(json['latestMsg']);
       }
-    } catch (e) {}
+    } catch (e) {
+      // latestMsg may be malformed; ignore so the conversation still loads.
+    }
     latestMsgSendTime = json['latestMsgSendTime'];
     draftText = json['draftText'];
     draftTextTime = json['draftTextTime'];

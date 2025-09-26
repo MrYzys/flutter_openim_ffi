@@ -14,11 +14,10 @@ typedef _DartInitializeApiDLDart = int Function(ffi.Pointer<ffi.Void> data);
 
 /// Thin, typed wrapper around the generated bindings.
 class OpenIMFFI {
-  OpenIMFFI._(this._lib)
-    : _bindings = OpenimFfiBindings(_lib),
-      _dartInitApi = _lib.lookupFunction<_DartInitializeApiDLNative, _DartInitializeApiDLDart>('Dart_InitializeApiDL');
+  OpenIMFFI._(ffi.DynamicLibrary lib)
+    : _bindings = OpenimFfiBindings(lib),
+      _dartInitApi = lib.lookupFunction<_DartInitializeApiDLNative, _DartInitializeApiDLDart>('Dart_InitializeApiDL');
 
-  final ffi.DynamicLibrary _lib;
   final OpenimFfiBindings _bindings;
   final _DartInitializeApiDLDart _dartInitApi;
 

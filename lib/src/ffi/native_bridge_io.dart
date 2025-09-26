@@ -62,12 +62,10 @@ class NativeBridge {
   }
 
   void _handleNativeEvent(Map<String, dynamic> envelope) {
-    // ignore: avoid_print
-    print('FFI Event: ${Utils.toJson(envelope)}');
+    Logger.print('FFI Event: ${Utils.toJson(envelope)}');
     final method = envelope['method'] as String?;
     if (method == null) {
-      // ignore: avoid_print
-      print('FFI Event missing method, keys=${envelope.keys}');
+      Logger.print('FFI Event missing method, keys=${envelope.keys}');
       return;
     }
     _handler?.call(NativeMethodCall(method, envelope));

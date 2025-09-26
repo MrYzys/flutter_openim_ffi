@@ -12,7 +12,7 @@ import '../ffi/event_bridge.dart';
 import '../ffi/native_bridge.dart';
 
 class IMManager {
-  NativeBridge _channel;
+  final NativeBridge _channel;
   late ConversationManager conversationManager;
   late FriendshipManager friendshipManager;
   late MessageManager messageManager;
@@ -208,7 +208,7 @@ class IMManager {
           dynamic data = call.arguments['data'];
           switch (type) {
             case 'onSyncServerStart':
-              print('dart onSyncServerStart: $data');
+              Logger.print('dart onSyncServerStart: $data');
               conversationManager.listener.syncServerStart(data);
               break;
             case 'onSyncServerProgress':
@@ -440,7 +440,7 @@ class IMManager {
     if (rawArgs is! Map) {
       return false;
     }
-    final args = Map<String, dynamic>.from(rawArgs as Map);
+    final args = Map<String, dynamic>.from(rawArgs);
     final dynamic data = args['data'];
     switch (method) {
       case 'OnConnecting':

@@ -1,8 +1,6 @@
 // Copyright (c) 2025 河川(MrYzys)[https://github.com/MrYzys]
 // Created: 2025-09-26
 // License: AGPL-3.0-only (see LICENSE)
-library flutter_openim_ffi;
-
 export 'src/enum/conversation_type.dart';
 export 'src/enum/group_at_type.dart';
 export 'src/enum/group_role_level.dart';

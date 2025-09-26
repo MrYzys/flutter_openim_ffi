@@ -6,7 +6,7 @@ import 'package:flutter_openim_ffi/flutter_openim_ffi.dart';
 import '../ffi/native_bridge.dart';
 
 class UserManager {
-  NativeBridge _channel;
+  final NativeBridge _channel;
   late OnUserListener listener;
 
   UserManager(this._channel);

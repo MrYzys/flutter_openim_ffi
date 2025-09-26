@@ -32,6 +32,7 @@ class NativeInvocation {
 class NativeBridge {
   NativeBridge();
 
+  // ignore: unused_field
   NativeMethodCallHandler? _handler;
 
   void setMethodCallHandler(NativeMethodCallHandler handler) {

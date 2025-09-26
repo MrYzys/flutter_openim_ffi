@@ -6,7 +6,7 @@ import 'package:flutter_openim_ffi/flutter_openim_ffi.dart';
 import '../ffi/native_bridge.dart';
 
 class MessageManager {
-  NativeBridge _channel;
+  final NativeBridge _channel;
 
   OnMsgSendProgressListener? msgSendProgressListener;
   late OnAdvancedMsgListener msgListener;

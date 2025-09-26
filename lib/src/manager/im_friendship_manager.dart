@@ -8,7 +8,7 @@ import 'package:flutter_openim_ffi/flutter_openim_ffi.dart';
 import '../ffi/native_bridge.dart';
 
 class FriendshipManager {
-  NativeBridge _channel;
+  final NativeBridge _channel;
   late OnFriendshipListener listener;
 
   FriendshipManager(this._channel);
