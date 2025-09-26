@@ -4,7 +4,7 @@
 name: flutter_openim_ffi
 description: "Flutter OpenIM FFI plugin."
 version: 3.8.3
-homepage: http://opensource.nween.com
+homepage: https://opensource.nween.com
 repository: https://github.com:MrYzys/flutter_openim_ffi.git
 
 environment:
