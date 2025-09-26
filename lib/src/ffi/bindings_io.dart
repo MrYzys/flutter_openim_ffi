@@ -18,6 +18,7 @@ class OpenIMFFI {
     : _bindings = OpenimFfiBindings(_lib),
       _dartInitApi = _lib.lookupFunction<_DartInitializeApiDLNative, _DartInitializeApiDLDart>('Dart_InitializeApiDL');
 
+  final ffi.DynamicLibrary _lib;
   final OpenimFfiBindings _bindings;
   final _DartInitializeApiDLDart _dartInitApi;
 
